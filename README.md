@@ -1,3 +1,8 @@
+# Name : MIDHUN S
+
+# Reg No : 212224230158
+
+
 # Linux-IPC-Message-Queues
 Linux IPC-Message Queues
 
@@ -22,13 +27,58 @@ Execute the C Program for the desired output.
 
 ## C program that receives a message from message queue and display them
 
+# Writer.c
+```
+#include <stdio.h> 
+#include <sys/ipc.h> 
+#include <sys/msg.h> 
 
+struct mesg_buffer { 
+	long mesg_type; 
+	char mesg_text[100]; 
+} message; 
+int main() 
+{ 	key_t key; 
+	int msgid;
+	key = ftok("progfile", 65); 
+	msgid = msgget(key, 0666 | IPC_CREAT); 
+	message.mesg_type = 1; 
+	printf("Write Data : "); 
+	gets(message.mesg_text); 
+	msgsnd(msgid, &message, sizeof(message), 0); 
+	printf("Data send is : %s \n", message.mesg_text); 
+	return 0; 
+}
+```
 
+# Reader.c
+```
+#include <stdio.h>
+#include <sys/ipc.h>
+#include <sys/msg.h>
 
+struct mesg_buffer {
+	long mesg_type;
+	char mesg_text[100];
+} message;
+int main()
+{
+	key_t key;
+	int msgid;
+	key = ftok("progfile", 65);
+	msgid = msgget(key, 0666 | IPC_CREAT);
+	msgrcv(msgid, &message, sizeof(message), 1, 0);
+	printf("Data Received is : %s \n",
+			message.mesg_text);
+
+	msgctl(msgid, IPC_RMID, NULL);
+	return 0;
+}
+```
 
 ## OUTPUT
 
-
+<img width="823" height="463" alt="image" src="https://github.com/user-attachments/assets/32e7b1cc-084d-416f-a2a8-af7ed68afdd2" />
 
 
 # RESULT:
